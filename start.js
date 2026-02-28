@@ -15,25 +15,34 @@ if (!token || !geminiApiKey) {
     process.exit(1);
 }
 
-// Telegram Bot ကို ချိတ်ဆက်ခြင်း
+// သင့် API Key ဖြင့် အသုံးပြုနိုင်သော Model များကို Google ထံမှ တိုက်ရိုက်လှမ်းမေးပြီး Log တွင် ပြသပေးမည့်စနစ်
+fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${geminiApiKey}`)
+    .then(res => res.json())
+    .then(data => {
+        if (data.models) {
+            const textModels = data.models
+                .filter(m => m.supportedGenerationMethods.includes("generateContent"))
+                .map(m => m.name.replace('models/', ''));
+            console.log("✅ သင့် API Key ဖြင့် သုံးနိုင်သော Model အမည်များ:", textModels.join(", "));
+        } else {
+            console.log("❌ API Key ပြဿနာရှိနေပါသည်။ Model စာရင်း ဆွဲယူ၍မရပါ။");
+        }
+    }).catch(err => console.log("Fetch error:", err.message));
+
 const bot = new TelegramBot(token);
 bot.deleteWebHook().then(() => {
     bot.startPolling();
     console.log("Bot is now polling and waiting for messages...");
 });
 
-// Render ၏ Deployment ကြောင့်ဖြစ်သော 409 Conflict Error ကို လျစ်လျူရှုရန်
 bot.on('polling_error', (error) => {
-    if (error.code === 'ETELEGRAM' && error.message.includes('409 Conflict')) {
-        // အဟောင်းနှင့် အသစ် ထပ်နေချိန် ခဏသာဖြစ်သဖြင့် ဘာမှမလုပ်ဘဲ ကျော်သွားမည်
-    } else {
-        console.error("Polling error:", error.message);
-    }
+    if (error.code !== 'ETELEGRAM') console.error("Polling error:", error.message);
 });
 
-// Gemini ကို ချိတ်ဆက်ခြင်း (အခမဲ့ Key များအတွက် အသေချာဆုံးဖြစ်သော 1.5-flash ကို သုံးထားပါသည်)
+// လက်ရှိ နောက်ဆုံးပေါ် Gemini 2.0 ကို ပြောင်းလဲချိတ်ဆက်ထားပါသည်
 const genAI = new GoogleGenerativeAI(geminiApiKey);
-const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" }); 
+
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
     const text = msg.text;
@@ -42,10 +51,8 @@ bot.on('message', async (msg) => {
 
     try {
         bot.sendChatAction(chatId, 'typing');
-
         const result = await model.generateContent(text);
         const response = result.response.text();
-
         bot.sendMessage(chatId, response);
         
     } catch (error) {
