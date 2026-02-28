@@ -20,7 +20,7 @@ if (!token || !geminiApiKey) {
 // Telegram နှင့် Gemini ကို စတင်ချိတ်ဆက်ခြင်း
 const bot = new TelegramBot(token, { polling: true });
 const genAI = new GoogleGenerativeAI(geminiApiKey);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 console.log("Bot is successfully connected and waiting for messages...");
 
