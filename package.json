@@ -2,7 +2,7 @@
   "name": "openclaw-bot",
   "version": "1.0.0",
   "scripts": {
-    "start": "openclaw config set channels.telegram.enabled true && openclaw gateway"
+    "start": "node start.js"
   },
   "dependencies": {
     "openclaw": "latest"
