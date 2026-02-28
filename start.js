@@ -33,8 +33,7 @@ bot.on('polling_error', (error) => {
 
 // Gemini ကို ချိတ်ဆက်ခြင်း (အခမဲ့ Key များအတွက် အသေချာဆုံးဖြစ်သော 1.5-flash ကို သုံးထားပါသည်)
 const genAI = new GoogleGenerativeAI(geminiApiKey);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
+const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
     const text = msg.text;
