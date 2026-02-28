@@ -26,7 +26,7 @@ bot.deleteWebHook().then(() => {
 
 // Gemini ကို ချိတ်ဆက်ခြင်း (-latest ထည့်သွင်း၍ 404 Error ကို ဖြေရှင်းထားပါသည်)
 const genAI = new GoogleGenerativeAI(geminiApiKey);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
 // Telegram မှ စာဝင်လာတိုင်း Gemini ထံပို့ပြီး အဖြေပြန်ပေးမည့်စနစ်
 bot.on('message', async (msg) => {
