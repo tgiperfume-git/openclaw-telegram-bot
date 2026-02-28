@@ -1,10 +1,12 @@
 {
-  "name": "openclaw-bot",
+  "name": "gemini-telegram-bot",
   "version": "1.0.0",
   "scripts": {
     "start": "node start.js"
   },
   "dependencies": {
-    "openclaw": "latest"
+    "@google/generative-ai": "^0.21.0",
+    "express": "^4.21.2",
+    "node-telegram-bot-api": "^0.66.0"
   }
 }
